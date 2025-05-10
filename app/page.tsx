@@ -2,22 +2,23 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import Navbar from "@/components/Navbar";
 
 export default function Home() {
   const router = useRouter();
 
-  useEffect(() => {
-    router.push("/login");
-  });
+  // useEffect(() => {
+  //   router.push("/login");
+  // });
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="flex flex-col space-y-3">
-        <Skeleton className="h-[125px] w-[250px] rounded-xl" />
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-[250px]" />
-          <Skeleton className="h-4 w-[200px]" />
+    <>
+      <div className="grid grid-row-[61px_1fr]">
+        <Navbar />
+
+        <div className="flex justify-center items-center" style={{ height: "calc(100vh - 61px)" }}>
+          <h1></h1>
         </div>
       </div>
-    </div>
+    </>
   );
 }

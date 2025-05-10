@@ -1,3 +1,10 @@
+"use client";
+import { supabase } from "@/lib/supabaseClient";
+import type { User } from "@supabase/supabase-js";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
+
 import { ChevronsUpDown } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -17,9 +24,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Separator } from "@/components/ui/separator";
-
 export default function AvatarBadge() {
+  const [sessionUser, setSessionUser] = useState<User | null>(null);
+  const router = useRouter();
+
+  const signOut = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    const { error } = await supabase.auth.signOut();
+    if (!error) router.push("/login");
+  };
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        setSessionUser(session?.user);
+      }
+    };
+    checkUser();
+  }, []);
   return (
     <>
       <DropdownMenu>
@@ -29,12 +54,13 @@ export default function AvatarBadge() {
               <AvatarImage src="https://i.pravatar.cc/150?img=5" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-            <div className="flex flex-cols truncate justify-center">
-              <div className="grid grid-rows-2 text-left h-full truncate">
-                <h2 className="flex flex-1 text-xs">Username</h2>
-                <p className="flex flex-1 text-xs">example@example.com</p>
+            <div className="flex flex-cols truncate justify-center space-x-4 w-full">
+              <div className="flex items-center text-left h-full truncate justify-between w-full">
+                <h2 className="flex flex-1 text-xs">{sessionUser?.email?.split("@")[0]}</h2>
+                <div className="flex flex-none items-center justify-center w-8">
+                  <ChevronsUpDown />
+                </div>
               </div>
-              <ChevronsUpDown />
             </div>
           </Button>
         </DropdownMenuTrigger>
@@ -52,8 +78,10 @@ export default function AvatarBadge() {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            Log out
+          <DropdownMenuItem onClick={signOut}>
+            <Button variant={"ghost"} className="h-5 text-left">
+              Log out
+            </Button>
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuContent>

@@ -1,4 +1,4 @@
-import { Home, Inbox, Search } from "lucide-react";
+import { Home, Inbox, Search, FilePlus, File } from "lucide-react";
 import AvatarBadge from "./AvatarBadge";
 
 import {
@@ -36,6 +36,22 @@ const items = [
   },
 ];
 
+const dataUnit = {
+  pagesMain: [
+    {
+      title: "Pages",
+      url: "#",
+      icon: File,
+      isActive: true,
+      items: [
+        {
+          title: "",
+        },
+      ],
+    },
+  ],
+};
+
 export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
@@ -55,12 +71,25 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               ))}
               <Separator />
+              <SidebarMenuItem key={"Pages"}>
+                <SidebarMenuButton asChild>
+                  <a href={"#"}>
+                    <File />
+                    <span>Pages</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <Button>Lol</Button>
+        <Button variant="outline">
+          <div className="flex items-center justify-center">
+            <FilePlus />
+          </div>
+          <div className="truncate">Add Note</div>
+        </Button>
         <AvatarBadge />
       </SidebarFooter>
     </Sidebar>
